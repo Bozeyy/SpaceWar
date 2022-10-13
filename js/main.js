@@ -31,7 +31,6 @@ class Player {
 
     draw() {
         c.drawImage(imgVesseau, this.position.x, this.position.y, this.width, this.height);
-        //c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 
     update() {
@@ -43,6 +42,62 @@ class Player {
     }
 }
 
+class Projectile {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.taille = 0;
+    }
+
+    draw() {
+        c.fillStyle = 'yellow';
+        c.fillRect(this.x, this.y, world.height/40, -this.taille);
+    }
+
+}
+// liste de projectile
+let projectiles = [];
+
+class Enemy {
+    constructor() {
+        this.width = tailleRef;
+        this.height = tailleRef;
+        this.velocity = {
+            // nombre aléatoire entre -world.width/10 et world.width/10
+            x: Math.random() * (world.width/100 - -world.width/100) + -world.width/100,
+            y: world.width/100
+        }
+        this.position = {
+            x: Math.random() * (world.width - this.width),
+            y: 0 + this.height*1.3
+        }
+    }
+
+    draw() {
+        c.fillStyle = 'red';
+        c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+
+    update() {
+        
+        if (this.position.x + this.velocity.x > 0 && this.position.x + this.velocity.x < world.width - this.width) {
+            this.position.x += this.velocity.x;
+        }
+        if (this.position.y + this.velocity.y > 0 && this.position.y + this.velocity.y < world.height - this.height) {
+            this.position.y += this.velocity.y;
+        }
+        this.draw();
+    }
+
+    changerVelocity() {
+        this.velocity.x = Math.random() * (world.width/100 - -world.width/100) + -world.width/100;
+    }
+}
+
+// liste d'enemies
+let enemies = [];
+
+
 const player = new Player();
 
 let frames = 0;
@@ -52,17 +107,48 @@ function AnimationLoop() {
     requestAnimationFrame(AnimationLoop);
     c.clearRect(0, 0, world.width, world.height);
     if (Continue) {
-
         if (Pause) {
             // rendre le world invisible
             world.setAttribute("display", "none");
             console.log('pause');
         } else {
             player.update();
+            projectiles.forEach((projectile, index) => {
+                projectile.draw();
+                if (projectile.taille < world.height ) {
+                    projectile.taille += tailleRef;
+                } else {
+                    projectiles.splice(index, 1);
+                }
+            });
+
+            enemies.forEach((enemy, index) => {
+                enemy.update();
+                // nombre aléatoire entre 0 et 4
+                if (Math.random() * (4 - 0) + 0 > 3) {
+                    enemy.changerVelocity();
+                }
+                if (enemy.position.y > world.height - tailleRef*1.4) {
+                    enemies.splice(index, 1);
+                }
+
+                for (let i = 0; i < projectiles.length; i++) {
+                    const projectile = projectiles[i];
+                    if ( projectile.x < enemy.position.x + enemy.width*1.5 && projectile.x + world.height/40 > enemy.position.x - enemy.width) {
+                        if ( enemy.position.y > projectile.y - projectile.taille) {
+                            console.log('collision');
+                            enemies.splice(index, 1);
+                        }
+                    }
+                }
+
+            });
+
+
+            if (frames % 50 === 0) {
+               enemies.push(new Enemy());
+            }
         }
-
-
-
     }
     frames++;
 }
@@ -90,6 +176,7 @@ function Play() {
 
 
 
+
 // EventListeners
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
@@ -99,6 +186,11 @@ document.addEventListener('keydown', (event) => {
         case 'ArrowRight':
             player.velocity.x = tailleRef/6;
             break;
+        case 'ArrowUp':
+            const p = new Projectile(player.position.x, player.position.y);
+            projectiles.push(p);
+            break;
+
     }
 });
 
