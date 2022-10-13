@@ -23,6 +23,10 @@ body {
 
 #game {
     border: solid 1px white;
-    width: 80%;
     margin: 1em;
+}
+
+
+.btn-play {
+    position: absolute;
 }
