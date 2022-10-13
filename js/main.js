@@ -11,6 +11,13 @@ const imgVesseau = new Image();
 imgVesseau.src = 'img/ship.png';
 
 
+var coin = 0;
+const TextCoin = document.querySelector('#coin');
+
+var health = 100;
+const TextHealth = document.querySelector('.health');
+
+
 let Continue = true;
 
 let Pause = true;
@@ -130,6 +137,7 @@ function AnimationLoop() {
                 }
                 if (enemy.position.y > world.height - tailleRef*1.4) {
                     enemies.splice(index, 1);
+                    health -= 10;
                 }
 
                 for (let i = 0; i < projectiles.length; i++) {
@@ -138,16 +146,17 @@ function AnimationLoop() {
                         if ( enemy.position.y > projectile.y - projectile.taille) {
                             console.log('collision');
                             enemies.splice(index, 1);
+                            coin++;
                         }
                     }
                 }
 
             });
-
-
             if (frames % 50 === 0) {
                enemies.push(new Enemy());
             }
+
+            Update();
         }
     }
     frames++;
@@ -164,7 +173,10 @@ function Play() {
 }  
 
 
-
+function Update() {
+    TextCoin.innerHTML = coin;
+    TextHealth.setAttribute("style", "width: " + health + "%");
+}
 
 
 
@@ -181,10 +193,10 @@ function Play() {
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'ArrowLeft':
-            player.velocity.x = -tailleRef/6;
+            player.velocity.x = -tailleRef/2;
             break;
         case 'ArrowRight':
-            player.velocity.x = tailleRef/6;
+            player.velocity.x = tailleRef/2;
             break;
         case 'ArrowUp':
             const p = new Projectile(player.position.x, player.position.y);
