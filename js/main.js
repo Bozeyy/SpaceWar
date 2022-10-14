@@ -21,7 +21,6 @@ const TextNbEnemyLeft = document.querySelector('.nbEnemyLeft')
 
 
 let Continue = true;
-
 let Pause = true;
 
 class Player {
@@ -220,6 +219,15 @@ function Replay() {
 }
 
 
+
+
+function acheterVie() {
+    if (coin > 4 && player.health < 100 && vague.nbEnemyLeft < 1) {
+        player.health += 10;
+        coin -= 5;
+        Update();
+    }
+}
 
 
 
