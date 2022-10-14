@@ -6,12 +6,16 @@ var btn = document.querySelector(".btn-play");
 world.width = window.innerHeight;
 world.height = window.innerHeight;
 const tailleRef = world.width/25;
+const tailleLaser = world.width/80
 
 const imgVesseau = new Image();
 imgVesseau.src = 'img/ship.png';
 
 const imgVesseauEnemie = new Image();
 imgVesseauEnemie.src = 'img/VesseauEnemie.png';
+
+const imgLaser = new Image();
+imgLaser.src = 'img/Laser.png';
 
 
 var coin = 0;
@@ -22,6 +26,8 @@ const TextNbEnemyLeft = document.querySelector('.nbEnemyLeft')
 
 let Continue = true;
 let Pause = true;
+
+let enemiesCreate = 0;
 
 class Player {
     constructor() {
@@ -60,8 +66,9 @@ class Projectile {
     }
 
     draw() {
-        c.fillStyle = 'yellow';
-        c.fillRect(this.x, this.y, world.height/40, -this.taille);
+        //c.fillStyle = 'yellow';
+        //c.fillRect(this.x, this.y, world.height/40, -this.taille);
+        c.drawImage(imgLaser ,this.x+((player.width-tailleLaser)/2), this.y, tailleLaser, -this.taille)
     }
 
 }
@@ -161,6 +168,7 @@ function AnimationLoop() {
                 if (enemy.position.y > world.height - tailleRef*1.4) {
                     enemies.splice(index, 1);
                     player.health -= 10;
+                    vague.nbEnemyLeft--;
                 }
 
                 for (let i = 0; i < projectiles.length; i++) {
@@ -170,14 +178,15 @@ function AnimationLoop() {
                             console.log('collision');
                             enemies.splice(index, 1);
                             coin++;
+                            vague.nbEnemyLeft--;
                         }
                     }
                 }
 
             });
-            if (frames % 50 === 0 && vague.nbEnemyLeft > 0) {
-               enemies.push(new Enemy());
-               vague.nbEnemyLeft--;
+            if (frames % 50 === 0 && enemiesCreate < vague.nbEnemy) {
+                enemies.push(new Enemy());
+                enemiesCreate++;
             }
             Update();
         }

@@ -76,6 +76,19 @@ body {
     float: left;
 }
 
+.nbEnemy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5% 0;
+}
+
+#Enm-left {
+    color: #f3f3f3;
+    font-family: 'Silkscreen', monospace;
+    font-size: 2em;
+}
+
 .nbEnemyLeft {
     font-family: 'Silkscreen', monospace;
     color: #f3f3f3;
@@ -87,6 +100,7 @@ body {
 .left {
     height: 100%;
     width: 50%;
+    margin-left: 1em;
 }
 
 .btn-play {
@@ -133,6 +147,7 @@ body {
 .AcheterVie {
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -140,13 +155,40 @@ body {
 .title-health {
     color: #f3f3f3;
     font-family: 'Silkscreen', monospace;
-
 }
 
 #plus-vie {
     color: #f3f3f3;
     background-color: rgba(0, 0, 0, 0);
-    font-size: 1em;
+    font-size: 2em;
     margin-left: 1em;
     border: solid 1px #f3f3f3;
+    padding: 0 6px;
+}
+
+.price-vie {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.price-vie p {
+    font-size: 2em;
+}
+
+.btm-vie {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Silkscreen', monospace;
+}
+
+.btm-vie p {
+    margin: 0 1em;
+    color: #f3f3f3;
+}
+
+.btm-vie img {
+    height: 3em;
+    margin: 0;
 }
