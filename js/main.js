@@ -10,12 +10,14 @@ const tailleRef = world.width/25;
 const imgVesseau = new Image();
 imgVesseau.src = 'img/ship.png';
 
+const imgVesseauEnemie = new Image();
+imgVesseauEnemie.src = 'img/VesseauEnemie.png';
+
 
 var coin = 0;
 const TextCoin = document.querySelector('#coin');
-
-var health = 100;
 const TextHealth = document.querySelector('.health');
+const TextNbEnemyLeft = document.querySelector('.nbEnemyLeft')
 
 
 let Continue = true;
@@ -24,6 +26,7 @@ let Pause = true;
 
 class Player {
     constructor() {
+        this.health = 100;
         this.width = tailleRef;
         this.height = tailleRef;
         this.velocity = {
@@ -41,6 +44,7 @@ class Player {
     }
 
     update() {
+
 
         if (this.position.x + this.velocity.x > 0 && this.position.x + this.velocity.x < world.width - this.width) {
             this.position.x += this.velocity.x;
@@ -81,8 +85,9 @@ class Enemy {
     }
 
     draw() {
-        c.fillStyle = 'red';
-        c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        //c.fillStyle = 'red';
+        //c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        c.drawImage(imgVesseauEnemie, this.position.x, this.position.y, this.width, this.height);
     }
 
     update() {
@@ -100,12 +105,28 @@ class Enemy {
         this.velocity.x = Math.random() * (world.width/100 - -world.width/100) + -world.width/100;
     }
 }
-
 // liste d'enemies
 let enemies = [];
-
-
 const player = new Player();
+
+
+class Vague {
+    constructor() {
+        this.vague = 1;
+        this.nbEnemy = 10;
+        this.nbEnemyLeft = 10;
+    }
+
+
+    newVague() {
+        this.nbEnemy = (this.vague * 10) + (this.vague * 10)/2
+        this.nbEnemyLeft = this.nbEnemy;
+    }
+}
+
+const vague = new Vague();
+
+
 
 let frames = 0;
 
@@ -120,6 +141,9 @@ function AnimationLoop() {
             console.log('pause');
         } else {
             player.update();
+            if (player.health <= 0) {
+                Pause = true;
+            }
             projectiles.forEach((projectile, index) => {
                 projectile.draw();
                 if (projectile.taille < world.height ) {
@@ -137,7 +161,7 @@ function AnimationLoop() {
                 }
                 if (enemy.position.y > world.height - tailleRef*1.4) {
                     enemies.splice(index, 1);
-                    health -= 10;
+                    player.health -= 10;
                 }
 
                 for (let i = 0; i < projectiles.length; i++) {
@@ -152,10 +176,10 @@ function AnimationLoop() {
                 }
 
             });
-            if (frames % 50 === 0) {
+            if (frames % 50 === 0 && vague.nbEnemyLeft > 0) {
                enemies.push(new Enemy());
+               vague.nbEnemyLeft--;
             }
-
             Update();
         }
     }
@@ -175,7 +199,8 @@ function Play() {
 
 function Update() {
     TextCoin.innerHTML = coin;
-    TextHealth.setAttribute("style", "width: " + health + "%");
+    TextHealth.setAttribute("style", "width: " + player.health + "%");
+    TextNbEnemyLeft.innerHTML = vague.nbEnemyLeft;
 }
 
 
@@ -183,6 +208,16 @@ function Update() {
 
 
 
+
+
+function Replay() {
+    console.log('replay');
+    if ( vague.nbEnemyLeft <= 0 ) {
+        vague.vague++;
+        vague.newVague();
+        TextNbEnemyLeft.innerHTML = vague.nbEnemyLeft;
+    }
+}
 
 
 

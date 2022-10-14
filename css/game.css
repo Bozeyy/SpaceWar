@@ -72,7 +72,24 @@ body {
     float: left;
 }
 
+.nbEnemyLeft {
+    font-family: 'Silkscreen', monospace;
+    color: #f3f3f3;
+    font-size: 2em;
+}
 
 .btn-play {
     position: absolute;
+}
+
+.btn-play-div {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#btn-play-left {
+    height: 25%;
 }
