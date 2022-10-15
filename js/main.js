@@ -224,6 +224,7 @@ function Replay() {
         vague.vague++;
         vague.newVague();
         TextNbEnemyLeft.innerHTML = vague.nbEnemyLeft;
+        enemiesCreate = 0;
     }
 }
 
