@@ -81,18 +81,17 @@ body {
     justify-content: center;
     align-items: center;
     margin: 5% 0;
+    font-size: 1.5em;
 }
 
 #Enm-left {
     color: #f3f3f3;
     font-family: 'Silkscreen', monospace;
-    font-size: 2em;
 }
 
 .nbEnemyLeft {
     font-family: 'Silkscreen', monospace;
     color: #f3f3f3;
-    font-size: 2em;
 }
 
 

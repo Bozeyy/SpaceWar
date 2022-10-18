@@ -203,6 +203,9 @@ function AnimationLoop() {
                     enemies.splice(index, 1);
                     player.health -= 10;
                     vague.nbEnemyLeft--;
+                    c.fillStyle = 'yellow';
+                    // faire un rectagle
+                    c.fillRect(0, world.height-tailleRef/4, world.width, tailleRef/4);
                 }
 
                 for (let i = 0; i < projectiles.length; i++) {
