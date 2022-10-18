@@ -3,17 +3,21 @@ const c = world.getContext('2d');
 
 var btn = document.querySelector(".btn-play");
 
+// initialisation de la taille de la fenetre
 world.width = window.innerHeight;
 world.height = window.innerHeight;
 const tailleRef = world.width/25;
 const tailleLaser = world.width/80
 
+// image du vesseau
 const imgVesseau = new Image();
 imgVesseau.src = 'img/ship.png';
 
+// image du vesseau Enemie 
 const imgVesseauEnemie = new Image();
 imgVesseauEnemie.src = 'img/VesseauEnemie.png';
 
+// image du laser
 const imgLaser = new Image();
 imgLaser.src = 'img/Laser.png';
 
@@ -29,6 +33,8 @@ explo4.src = 'img/Explo/Explo4.png';
 const explo5 = new Image();
 explo5.src = 'img/Explo/Explo5.png';
 
+// valeur de la velocité 
+var velociteRef = tailleRef/2;
 
 var coin = 0;
 const TextCoin = document.querySelector('#coin');
@@ -169,7 +175,7 @@ function AnimationLoop() {
     // attendre 1 milliseconde
     setTimeout(function () {
         requestAnimationFrame(AnimationLoop);
-    }, 1);
+    }, 15);
 
     c.clearRect(0, 0, world.width, world.height);
     if (Continue) {
@@ -284,14 +290,22 @@ function Replay() {
     }
 }
 
-
-
-
 function acheterVie() {
     if (coin > 4 && player.health < 100 && vague.nbEnemyLeft < 1) {
         player.health += 10;
         coin -= 5;
         Update();
+    }
+}
+
+
+function acheterVitesse() {
+    if (velociteRef < tailleRef ) {
+        if (coin > 4 && vague.nbEnemyLeft < 1) {
+            velociteRef *= 1.2;
+            coin -= 10;
+            Update();
+        }
     }
 }
 
@@ -302,10 +316,10 @@ function acheterVie() {
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'ArrowLeft':
-            player.velocity.x = -tailleRef/2;
+            player.velocity.x = -velociteRef;
             break;
         case 'ArrowRight':
-            player.velocity.x = tailleRef/2;
+            player.velocity.x = velociteRef;
             break;
         case 'ArrowUp':
             const p = new Projectile(player.position.x, player.position.y);
