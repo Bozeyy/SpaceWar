@@ -17,6 +17,18 @@ imgVesseauEnemie.src = 'img/VesseauEnemie.png';
 const imgLaser = new Image();
 imgLaser.src = 'img/Laser.png';
 
+// image D'explosions
+const explo1 = new Image();
+explo1.src = 'img/Explo/Explo1.png';
+const explo2 = new Image();
+explo2.src = 'img/Explo/Explo2.png';
+const explo3 = new Image();
+explo3.src = 'img/Explo/Explo3.png';
+const explo4 = new Image();
+explo4.src = 'img/Explo/Explo4.png';
+const explo5 = new Image();
+explo5.src = 'img/Explo/Explo5.png';
+
 
 var coin = 0;
 const TextCoin = document.querySelector('#coin');
@@ -49,8 +61,6 @@ class Player {
     }
 
     update() {
-
-
         if (this.position.x + this.velocity.x > 0 && this.position.x + this.velocity.x < world.width - this.width) {
             this.position.x += this.velocity.x;
         }
@@ -78,6 +88,7 @@ let projectiles = [];
 
 class Enemy {
     constructor() {
+        this.time = 0;
         this.width = tailleRef;
         this.height = tailleRef;
         this.velocity = {
@@ -97,6 +108,21 @@ class Enemy {
         c.drawImage(imgVesseauEnemie, this.position.x, this.position.y, this.width, this.height);
     }
 
+    drawDeath() {
+        c.fillStyle = 'red';
+        if (this.time < 2) {
+            c.drawImage(explo1, this.position.x, this.position.y, this.width, this.height);
+        } else if (this.time < 4) {
+            c.drawImage(explo2, this.position.x, this.position.y, this.width, this.height);
+        } else if (this.time < 6) {
+            c.drawImage(explo3, this.position.x, this.position.y, this.width, this.height);
+        } else if (this.time < 8) {
+            c.drawImage(explo4, this.position.x, this.position.y, this.width, this.height);
+        } else if (this.time < 10) {
+            c.drawImage(explo5, this.position.x, this.position.y, this.width, this.height);
+        } 
+    }
+
     update() {
         
         if (this.position.x + this.velocity.x > 0 && this.position.x + this.velocity.x < world.width - this.width) {
@@ -114,6 +140,7 @@ class Enemy {
 }
 // liste d'enemies
 let enemies = [];
+let enemiesDead = [];
 const player = new Player();
 
 
@@ -152,9 +179,11 @@ function AnimationLoop() {
             console.log('pause');
         } else {
             player.update();
+            
             if (player.health <= 0) {
                 Pause = true;
             }
+
             projectiles.forEach((projectile, index) => {
                 projectile.draw();
                 if (projectile.taille < world.height ) {
@@ -178,22 +207,38 @@ function AnimationLoop() {
 
                 for (let i = 0; i < projectiles.length; i++) {
                     const projectile = projectiles[i];
-                    if ( projectile.x < enemy.position.x + enemy.width*1.5 && projectile.x + world.height/40 > enemy.position.x - enemy.width) {
+                    if ( projectile.x < enemy.position.x + enemy.width && projectile.x + world.height/40 > enemy.position.x - enemy.width) {
                         if ( enemy.position.y > projectile.y - projectile.taille) {
-                            console.log('collision');
+                            enemies[index].width *= 4;
+                            enemies[index].height *= 4;
+                            enemies[index].position.x -= enemies[index].width/2;
+                            enemies[index].position.y -= enemies[index].height/2;
+                            enemiesDead.push(enemies[index]);
                             enemies.splice(index, 1);
                             coin++;
                             vague.nbEnemyLeft--;
                         }
                     }
                 }
-
             });
+            
             if (frames % 50 === 0 && enemiesCreate < vague.nbEnemy) {
                 enemies.push(new Enemy());
                 enemiesCreate++;
             }
             Update();
+
+            enemiesDead.forEach((enemy, index) => {
+                enemy.time++;
+                if (enemy.time > 10) {
+                    enemiesDead.splice(index, 1);
+                } else {
+                    enemy.drawDeath();
+                }
+            });
+            
+            
+            
         }
     }
     frames++;
@@ -215,6 +260,9 @@ function Update() {
     TextHealth.setAttribute("style", "width: " + player.health + "%");
     TextNbEnemyLeft.innerHTML = vague.nbEnemyLeft;
 }
+
+
+
 
 
 
