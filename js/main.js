@@ -68,7 +68,8 @@ class Projectile {
     draw() {
         //c.fillStyle = 'yellow';
         //c.fillRect(this.x, this.y, world.height/40, -this.taille);
-        c.drawImage(imgLaser ,this.x+((player.width-tailleLaser)/2), this.y, tailleLaser, -this.taille)
+        //c.drawImage(imgLaser ,this.x+((player.width-tailleLaser)/2), this.y, tailleLaser, -this.taille)
+        c.drawImage(imgLaser, this.x+((player.width-tailleLaser)/2), this.y, tailleLaser, -this.taille)
     }
 
 }
@@ -138,7 +139,11 @@ let frames = 0;
 
 
 function AnimationLoop() {
-    requestAnimationFrame(AnimationLoop);
+    // attendre 1 milliseconde
+    setTimeout(function () {
+        requestAnimationFrame(AnimationLoop);
+    }, 1);
+
     c.clearRect(0, 0, world.width, world.height);
     if (Continue) {
         if (Pause) {
